@@ -1,3 +1,28 @@
+/***************************************************************************
+**                                                                        **
+**  MathPlot - my university lab                                          **
+**  Copyright © 2020 Tonkonog Grigoriy                                    **
+**                                                                        **
+**  This program is free software: you can redistribute it and/or modify  **
+**  it under the terms of the GNU General Public License as published by  **
+**  the Free Software Foundation, either version 3 of the License, or     **
+**  (at your option) any later version.                                   **
+**                                                                        **
+**  This program is distributed in the hope that it will be useful,       **
+**  but WITHOUT ANY WARRANTY; without even the implied warranty of        **
+**  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         **
+**  GNU General Public License for more details.                          **
+**                                                                        **
+**  You should have received a copy of the GNU General Public License     **
+**  along with this program.  If not, see http://www.gnu.org/licenses/.   **
+**                                                                        **
+****************************************************************************
+**           Author: Тонконог Григорий                                    **
+**            Email: grigoriit@protonmail.com, giit@pm.me                 **
+**             Date: 27.05.20                                             **
+**          Version: 0.1.2                                                **
+****************************************************************************/
+
 #include "mainwindow.h"
 
 #include "ui_mainwindow.h"
@@ -6,6 +31,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
   //  this->ui->graphicsView->setScene(scena);
+  ui->tableWidget->hide();
 }
 
 MainWindow::~MainWindow() { delete ui; }
@@ -35,26 +61,51 @@ void MainWindow::on_calcButton_clicked() {
     hi = this->ui->lineEdit_7->text().toDouble();
 
     // Try to calc
-    double x1(0), x1t(0), y1(0), y1t(0);
+    QVector<double> k;  // For Runge-Kutta^4
+    QVector<double> y1, y2;
+    y1.append(0);
+    y2.append(E / (R * C));
+    // Calc logic
+    // Find 4 first value
+    k.clear();
+    for (int i(0); i < 200; i++) {
+      double y = E / (L * C) - (R / L) * y2[i] - (1 / (L * C)) * y1[i];
+      k.append(y);
+      k.append(y + (h * k[0]) / 2);
+      k.append(y + (h * k[1]) / 2);
+      k.append(y + (h * k[2]));
+      y2.append(y + (h * (k[0] + (2 * k[1]) + (2 * k[2]) + k[3])) / 6);
+      y1.append(y);
+    }
+    // Next calc
+
+    // Add to tableView
+    ui->tableWidget->clear();
+    ui->tableWidget->setColumnCount(2);
+    ui->tableWidget->setRowCount(y1.length());
+    ui->tableWidget->showGrid();
 
     // Draw to plot
-    QVector<double> x(15), y(15);
-    for (int i(0), j(0); i < 1000; i += 10, j += 2) {
-      x.append(i);
-      y.append(j);
-    }
     xcalcMax = 1000;
     ui->widgetPlot->addGraph();
-    ui->widgetPlot->graph(0)->setData(x, y);
+    ui->widgetPlot->addGraph();
+    for (int i = 0; i < y1.length(); i++) {
+      ui->widgetPlot->graph(0)->addData(y1[i], i);
+      ui->widgetPlot->graph(1)->addData(y2[i], i);
+      ui->tableWidget->setItem(
+          i, 0, new QTableWidgetItem(QString::number(y1[i], 'f', 4)));
+      ui->tableWidget->setItem(
+          i, 1, new QTableWidgetItem(QString::number(y2[i], 'f', 4)));
+    }
     ui->widgetPlot->xAxis->setLabel("x");
     ui->widgetPlot->yAxis->setLabel("y");
     ui->widgetPlot->xAxis->setRange(config.xmin, config.xmax);
     ui->widgetPlot->yAxis->setRange(config.ymin, config.ymax);
     ui->widgetPlot->graph(0)->setPen(config.fpen);
+    ui->widgetPlot->graph(1)->setPen(config.spen);
     ui->widgetPlot->replot();
 
   } catch (QException ex) {
-    QDebug(new QString("Exeption"));
     QDebug(new QString(ex.what()));
   } catch (...) {
     QDebug(new QString("Another exeption"));
@@ -66,6 +117,7 @@ void MainWindow::on_clrButton_clicked() {
   ui->widgetPlot->xAxis->setRange(config.xmin, config.xmax);
   ui->widgetPlot->yAxis->setRange(config.ymin, config.ymax);
   ui->widgetPlot->replot();
+  ui->tableWidget->clear();
 }
 
 void MainWindow::on_tbButton_clicked() {}
@@ -82,4 +134,11 @@ void MainWindow::on_horizontalScrollBar_sliderMoved(int position) {
   }
   ui->calcTimeLCD->display(position);
   ui->widgetPlot->replot();
+}
+
+void MainWindow::on_tbwButton_clicked() {
+  if (ui->tableWidget->isHidden())
+    ui->tableWidget->show();
+  else
+    ui->tableWidget->hide();
 }
