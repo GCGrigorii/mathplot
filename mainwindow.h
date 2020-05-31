@@ -32,6 +32,7 @@
 #include <QtCore>
 #include <QtGui>
 
+#include "about.h"
 #include "configuration.h"
 #include "plotconfig.h"
 #include "schema_display.h"
@@ -70,11 +71,14 @@ class MainWindow : public QMainWindow {
 
   void on_tbwButton_clicked();
 
+  void on_checkBox_stateChanged(int arg1);
+
+  void on_actionAbout_triggered();
+
  private:
   Ui::MainWindow *ui;
-  Schema_display *schema_wid;
-  PlotConfig *plotconfig_wid;
   QGraphicsScene *scena;
   qint64 xcalcMax = 100;
+  bool AutoSized = 0;
 };
 #endif  // MAINWINDOW_H

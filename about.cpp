@@ -23,34 +23,12 @@
 **          Version: 0.1.2                                                **
 ****************************************************************************/
 
-#include "configuration.h"
+#include "about.h"
 
-Configuration::Configuration() {
-  xmin = 0;
-  xmax = 100;
-  ymin = 0;
-  ymax = 3;
-  fpen.setColor(QColor(0, 0, 255));
-  spen.setColor(QColor(0, 255, 0));
-  tpen.setColor(QColor(255, 0, 0));
-}
-Configuration::~Configuration() {}
+#include "ui_about.h"
 
-void Configuration::loadConfig(std::string filename) {
-  //  if (!filename.empty()) {
-  //    QFile file;
-  //    file.open(*(filename.c_str()), QIODevice::ReadWrite);
-  //    parseFile(&file);
-  //  } else
-  //    throw("File open exeption");
+About::About(QWidget *parent) : QDialog(parent), ui(new Ui::About) {
+  ui->setupUi(this);
 }
 
-void Configuration::saveConfig(std::string filename) {}
-
-void Configuration::loadConfig() {}
-
-void Configuration::saveConfig() {}
-
-void Configuration::setConfigFile(std::string filename) {}
-
-bool parseFile(QFile *file) {}
+About::~About() { delete ui; }
