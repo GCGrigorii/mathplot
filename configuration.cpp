@@ -45,12 +45,12 @@ void Configuration::loadConfig(std::string filename) {
   //    throw("File open exeption");
 }
 
-void Configuration::saveConfig(std::string filename) {}
+// void Configuration::saveConfig(std::string filename) {}
 
-void Configuration::loadConfig() {}
+// void Configuration::loadConfig() {}
 
-void Configuration::saveConfig() {}
+// void Configuration::saveConfig() {}
 
-void Configuration::setConfigFile(std::string filename) {}
+// void Configuration::setConfigFile(std::string filename) {}
 
-bool parseFile(QFile *file) {}
+// bool parseFile(QFile *file) {}
