@@ -61,6 +61,7 @@ void MainWindow::on_actionAbout_triggered() {
 void MainWindow::on_calcButton_clicked() {
   // Get value
   try {
+    QDateTime start = QDateTime::currentDateTime();
     double E(0), R(0), L(0), C(0), e(0), h(0), hi(0);
     E = this->ui->lineEdit->text().toDouble();
     R = this->ui->lineEdit_2->text().toDouble();
@@ -78,32 +79,55 @@ void MainWindow::on_calcButton_clicked() {
     // Getting 4 start value
 
     for (int i(0); i < 4; i++) {
-      y1.append(y2[i]);
-      double y2x = (E / (L * C) - (R / L) * y2[i] - (1 / (L * C)) * y1[i]);
-      double k2 = (y2x + (h / 2) * y2x);
-      double k3 = (y2x + (h / 2) * k2);
-      double k4 = (y2x + h * k3);
-      y2.append(y1[i + 1] + (h / 6) * (y2x + 2 * k2 + 2 * k3 + k4));
+      {
+        double y1x = y2[i];
+        double k2 = (y1x + (h / 2) * y1x);
+        double k3 = (y1x + (h / 2) * k2);
+        double k4 = (y1x + h * k3);
+        y1.append(y1[i] + (h / 6) * (y1x + 2 * k2 + 2 * k3 + k4));
+      }
+      {
+        double y2x = (E / (L * C) - (R / L) * y2[i] - (1 / (L * C)) * y1[i]);
+        double k2 = (y2x + (h / 2) * y2x);
+        double k3 = (y2x + (h / 2) * k2);
+        double k4 = (y2x + h * k3);
+        y2.append(y2[i] + (h / 6) * (y2x + 2 * k2 + 2 * k3 + k4));
+      }
     }
 
     for (int i(3); (i * h) < hi; i++) {
-      std::vector<double> yx, y1kx;
-      yx.push_back(E / (L * C) - (R / L) * y2[i] - y1[i] / (L * C));
-      yx.push_back(E / (L * C) - (R / L) * y2[i - 1] - y1[i - 1] / (L * C));
-      yx.push_back(E / (L * C) - (R / L) * y2[i - 2] - y1[i - 2] / (L * C));
-      yx.push_back(E / (L * C) - (R / L) * y2[i - 3] - y1[i - 3] / (L * C));
-      double y1x = y1[i] + (h / 24) * ((55 * yx[0]) - (59 * yx[1]) +
-                                       (37 * yx[2]) - (9 * yx[3]));
-      y1kx.push_back(
-          y1[i] + (h / 24) * ((9 * (y1x + 19 * yx[0])) - (5 * yx[1]) + yx[2]));
-      for (int j(1); (y1kx[j] - y1kx[j - 1]) < e; j++)
-        y1kx.push_back(y1[i] + (h / 24) * ((9 * (y1kx[j - 1] + 19 * yx[0])) -
+      {
+        std::vector<double> y1kx;
+        double y1x = y1[i] + (h / 24) * ((55 * y2[i]) - (59 * y2[i - 1]) +
+                                         (37 * y2[i - 2]) - (9 * y2[i - 3]));
+        y1kx.push_back(y1[i] + (h / 24) * ((9 * y1x) + (19 * y2[i]) -
+                                           (5 * y2[i - 1]) + y2[i - 2]));
+        for (int j(1); (y1kx[j] - y1kx[j - 1]) > e; j++) {
+          y1kx.push_back(y1[i] + (h / 24) * ((9 * y1kx[j - 1]) + (19 * y2[i]) -
+                                             (5 * y2[i - 1]) + y2[i - 2]));
+        }
+        y1.append(y1kx[y1kx.size() - 1]);
+      }
+      {
+        std::vector<double> yx, y2kx;
+        yx.push_back(E / (L * C) - (R / L) * y2[i] - y1[i] / (L * C));
+        yx.push_back(E / (L * C) - (R / L) * y2[i - 1] - y1[i - 1] / (L * C));
+        yx.push_back(E / (L * C) - (R / L) * y2[i - 2] - y1[i - 2] / (L * C));
+        yx.push_back(E / (L * C) - (R / L) * y2[i - 3] - y1[i - 3] / (L * C));
+        double y2x = y2[i] + (h / 24) * ((55 * yx[0]) - (59 * yx[1]) +
+                                         (37 * yx[2]) - (9 * yx[3]));
+        y2kx.push_back(y2[i] + (h / 24) * ((9 * y2x) + (19 * yx[0]) -
                                            (5 * yx[1]) + yx[2]));
-      y2.append(y1kx[y1kx.size() - 1]);
-      y1.append(y2[i]);
+        for (int j(1); (y2kx[j] - y2kx[j - 1]) > e; j++) {
+          y2kx.push_back(y2[i] + (h / 24) * ((9 * y2kx[j - 1]) + (19 * yx[0]) -
+                                             (5 * yx[1]) + yx[2]));
+        }
+        y2.append(y2kx[y2kx.size() - 1]);
+      }
     }
-
-    // Next calc
+    QDateTime finish = QDateTime::currentDateTime();
+    int ms = start.time().msecsTo(finish.time());
+    ui->calcTimeLCD->display(ms);
 
     // Add to tableView
     ui->tableWidget->clear();
@@ -169,7 +193,6 @@ void MainWindow::on_horizontalScrollBar_sliderMoved(int position) {
     else
       ui->widgetPlot->xAxis->setRange(config.xmin, config.xmax);
   }
-  ui->calcTimeLCD->display(position);
   ui->widgetPlot->replot();
 }
 

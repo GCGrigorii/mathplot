@@ -353,13 +353,6 @@
      <height>27</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <addaction name="actionLoad_from"/>
-    <addaction name="actionSave_to"/>
-   </widget>
    <widget class="QMenu" name="menuOptions">
     <property name="sizeIncrement">
      <size>
@@ -379,7 +372,6 @@
     <addaction name="actionSchema"/>
     <addaction name="actionAbout"/>
    </widget>
-   <addaction name="menuFile"/>
    <addaction name="menuOptions"/>
    <addaction name="menuAbout"/>
   </widget>
