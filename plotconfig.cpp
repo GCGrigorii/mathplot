@@ -39,13 +39,10 @@ PlotConfig::PlotConfig(QWidget* parent, Configuration* cf)
   ui->lineEdit->setText(QString::number(r));
   ui->lineEdit_2->setText(QString::number(g));
   ui->lineEdit_3->setText(QString::number(b));
-  r = 0;
-  g = 0;
-  b = 0;
   cf->spen.color().getRgb(&r, &g, &b);
   ui->lineEdit_4->setText(QString::number(r));
-  ui->lineEdit_5->setText(QString::number(r));
-  ui->lineEdit_6->setText(QString::number(r));
+  ui->lineEdit_5->setText(QString::number(g));
+  ui->lineEdit_6->setText(QString::number(b));
 }
 PlotConfig::PlotConfig(QWidget* parent)
     : QWidget(parent), ui(new Ui::PlotConfig) {

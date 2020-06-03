@@ -133,6 +133,10 @@ void MainWindow::on_calcButton_clicked() {
     ui->tableWidget->clear();
     ui->tableWidget->setColumnCount(2);
     ui->tableWidget->setRowCount(y1.length());
+    QStringList labls;
+    labls.append("y1");
+    labls.append("y2");
+    ui->tableWidget->setHorizontalHeaderLabels(labls);
     ui->tableWidget->showGrid();
 
     // AutoResize
