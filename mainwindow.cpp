@@ -1,6 +1,6 @@
 /***************************************************************************
 **                                                                        **
-**  MathPlot - my university lab                                          **
+**  MathPlot                                                              **
 **  Copyright © 2020 Tonkonog Grigoriy                                    **
 **                                                                        **
 **  This program is free software: you can redistribute it and/or modify  **
@@ -21,6 +21,7 @@
 **            Email: grigoriit@protonmail.com, giit@pm.me                 **
 **             Date: 27.05.20                                             **
 **          Version: 0.1.2                                                **
+****************************************************************************/
 ****************************************************************************/
 
 #include "mainwindow.h"
@@ -78,53 +79,83 @@ void MainWindow::on_calcButton_clicked() {
     // Calc logic
     // Getting 4 start value
 
-    for (int i(0); i < 4; i++) {
-      {
-        double y1x = y2[i];
-        double k2 = (y1x + (h / 2) * y1x);
-        double k3 = (y1x + (h / 2) * k2);
-        double k4 = (y1x + h * k3);
-        y1.append(y1[i] + (h / 6) * (y1x + 2 * k2 + 2 * k3 + k4));
-      }
-      {
-        double y2x = (E / (L * C) - (R / L) * y2[i] - (1 / (L * C)) * y1[i]);
-        double k2 = (y2x + (h / 2) * y2x);
-        double k3 = (y2x + (h / 2) * k2);
-        double k4 = (y2x + h * k3);
-        y2.append(y2[i] + (h / 6) * (y2x + 2 * k2 + 2 * k3 + k4));
-      }
-    }
+    switch (method) {
+      case 0:
+        for (int i(0); i < 4; i++) {
+          {
+            double y1x = y2[i];
+            double k2 = (y1x + (h / 2) * y1x);
+            double k3 = (y1x + (h / 2) * k2);
+            double k4 = (y1x + h * k3);
+            y1.append(y1[i] + (h / 6) * (y1x + 2 * k2 + 2 * k3 + k4));
+          }
+          {
+            double y2x = (E / (L * C) - (R / L) * y2[i] - (1 / (L * C)) * y1[i]);
+            double k2 = (y2x + (h / 2) * y2x);
+            double k3 = (y2x + (h / 2) * k2);
+            double k4 = (y2x + h * k3);
+            y2.append(y2[i] + (h / 6) * (y2x + 2 * k2 + 2 * k3 + k4));
+          }
+        }
 
-    for (int i(3); (i * h) < hi; i++) {
-      {
-        std::vector<double> y1kx;
-        double y1x = y1[i] + (h / 24) * ((55 * y2[i]) - (59 * y2[i - 1]) +
-                                         (37 * y2[i - 2]) - (9 * y2[i - 3]));
-        y1kx.push_back(y1[i] + (h / 24) * ((9 * y1x) + (19 * y2[i]) -
-                                           (5 * y2[i - 1]) + y2[i - 2]));
-        for (int j(1); (y1kx[j] - y1kx[j - 1]) > e; j++) {
-          y1kx.push_back(y1[i] + (h / 24) * ((9 * y1kx[j - 1]) + (19 * y2[i]) -
-                                             (5 * y2[i - 1]) + y2[i - 2]));
+        for (int i(3); (i * h) < hi; i++) {
+          {
+            std::vector<double> y1kx;
+            double y1x = y1[i] + (h / 24) * ((55 * y2[i]) - (59 * y2[i - 1]) +
+                                             (37 * y2[i - 2]) - (9 * y2[i - 3]));
+            y1kx.push_back(y1[i] + (h / 24) * ((9 * y1x) + (19 * y2[i]) -
+                                               (5 * y2[i - 1]) + y2[i - 2]));
+            for (int j(1); (y1kx[j] - y1kx[j - 1]) > e; j++) {
+              y1kx.push_back(y1[i] + (h / 24) * ((9 * y1kx[j - 1]) + (19 * y2[i]) -
+                                                 (5 * y2[i - 1]) + y2[i - 2]));
+            }
+            y1.append(y1kx[y1kx.size() - 1]);
+          }
+          {
+            std::vector<double> y2kx;
+            double yx[4];
+            yx[0] = (E / (L * C) - (R / L) * y2[i] - y1[i] / (L * C));
+            yx[1] = (E / (L * C) - (R / L) * y2[i - 1] - y1[i - 1] / (L * C));
+            yx[2] = (E / (L * C) - (R / L) * y2[i - 2] - y1[i - 2] / (L * C));
+            yx[3] = (E / (L * C) - (R / L) * y2[i - 3] - y1[i - 3] / (L * C));
+            double y2x = y2[i] + (h / 24) * ((55 * yx[0]) - (59 * yx[1]) +
+                                             (37 * yx[2]) - (9 * yx[3]));
+            y2kx.push_back(y2[i] + (h / 24) * ((9 * y2x) + (19 * yx[0]) -
+                                               (5 * yx[1]) + yx[2]));
+            for (int j(1); (y2kx[j] - y2kx[j - 1]) > e; j++) {
+              y2kx.push_back(y2[i] + (h / 24) * ((9 * y2kx[j - 1]) + (19 * yx[0]) -
+                                                 (5 * yx[1]) + yx[2]));
+            }
+            y2.append(y2kx[y2kx.size() - 1]);
+          }
         }
-        y1.append(y1kx[y1kx.size() - 1]);
-      }
-      {
-        std::vector<double> yx, y2kx;
-        yx.push_back(E / (L * C) - (R / L) * y2[i] - y1[i] / (L * C));
-        yx.push_back(E / (L * C) - (R / L) * y2[i - 1] - y1[i - 1] / (L * C));
-        yx.push_back(E / (L * C) - (R / L) * y2[i - 2] - y1[i - 2] / (L * C));
-        yx.push_back(E / (L * C) - (R / L) * y2[i - 3] - y1[i - 3] / (L * C));
-        double y2x = y2[i] + (h / 24) * ((55 * yx[0]) - (59 * yx[1]) +
-                                         (37 * yx[2]) - (9 * yx[3]));
-        y2kx.push_back(y2[i] + (h / 24) * ((9 * y2x) + (19 * yx[0]) -
-                                           (5 * yx[1]) + yx[2]));
-        for (int j(1); (y2kx[j] - y2kx[j - 1]) > e; j++) {
-          y2kx.push_back(y2[i] + (h / 24) * ((9 * y2kx[j - 1]) + (19 * yx[0]) -
-                                             (5 * yx[1]) + yx[2]));
+        break;
+
+      case 1:
+        for (long long i(0); (i * h) < hi; i++) {
+          {
+            double y1x = y2[i];
+            double k2 = (y1x + (h / 2) * y1x);
+            double k3 = (y1x + (h / 2) * k2);
+            double k4 = (y1x + h * k3);
+            y1.append(y1[i] + (h / 6) * (y1x + 2 * k2 + 2 * k3 + k4));
+          }
+          {
+            double y2x = (E / (L * C) - (R / L) * y2[i] - (1 / (L * C)) * y1[i]);
+            double k2 = (y2x + (h / 2) * y2x);
+            double k3 = (y2x + (h / 2) * k2);
+            double k4 = (y2x + h * k3);
+            y2.append(y2[i] + (h / 6) * (y2x + 2 * k2 + 2 * k3 + k4));
+          }
         }
-        y2.append(y2kx[y2kx.size() - 1]);
+        break;
+      case 2:
+
+        break;
+
+      default:break;
       }
-    }
+
     QDateTime finish = QDateTime::currentDateTime();
     int ms = start.time().msecsTo(finish.time());
     ui->calcTimeLCD->display(ms);
@@ -209,4 +240,8 @@ void MainWindow::on_tbwButton_clicked() {
 
 void MainWindow::on_checkBox_stateChanged(int isCheked) {
   AutoSized = isCheked;
+}
+
+void MainWindow::on_comboBox_currentIndexChanged(int index){
+  method = index;
 }

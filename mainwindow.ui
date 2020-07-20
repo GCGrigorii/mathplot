@@ -7,14 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>954</width>
-    <height>415</height>
+    <height>403</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="baseSize">
+   <size>
+    <width>954</width>
+    <height>403</height>
+   </size>
   </property>
   <property name="font">
    <font>
@@ -44,10 +50,31 @@
      <string>Circuit parameters</string>
     </property>
     <layout class="QGridLayout" name="gridLayout">
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>R =</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="lineEdit_3">
+       <property name="text">
+        <string>0.05</string>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
         <string>E =</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>L =</string>
        </property>
       </widget>
      </item>
@@ -58,45 +85,24 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
+     <item row="6" column="1">
+      <widget class="QLineEdit" name="lineEdit_4">
        <property name="text">
-        <string>R =</string>
+        <string>0.2</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1" rowspan="2">
+     <item row="1" column="1" rowspan="3">
       <widget class="QLineEdit" name="lineEdit_2">
        <property name="text">
         <string>10</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0" rowspan="2">
+     <item row="4" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>C =</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="lineEdit_3">
-       <property name="text">
-        <string>0.05</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>L =</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLineEdit" name="lineEdit_4">
-       <property name="text">
-        <string>0.2</string>
        </property>
       </widget>
      </item>
@@ -169,7 +175,7 @@
      </rect>
     </property>
     <property name="sizePolicy">
-     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
       <horstretch>0</horstretch>
       <verstretch>0</verstretch>
      </sizepolicy>
@@ -205,10 +211,10 @@
     <widget class="QLCDNumber" name="calcTimeLCD">
      <property name="geometry">
       <rect>
-       <x>660</x>
-       <y>310</y>
-       <width>64</width>
-       <height>23</height>
+       <x>640</x>
+       <y>300</y>
+       <width>81</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -236,10 +242,10 @@
     <widget class="QLabel" name="label_8">
      <property name="geometry">
       <rect>
-       <x>555</x>
-       <y>310</y>
-       <width>101</width>
-       <height>20</height>
+       <x>550</x>
+       <y>300</y>
+       <width>91</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
@@ -323,15 +329,41 @@
     <widget class="QCheckBox" name="checkBox">
      <property name="geometry">
       <rect>
-       <x>240</x>
+       <x>440</x>
        <y>300</y>
-       <width>92</width>
-       <height>25</height>
+       <width>81</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
       <string>AutoSize</string>
      </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>300</y>
+       <width>191</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+     <property name="currentText">
+      <string>Adamsa-Bashforta</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Adamsa-Bashforta</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Runge-Kutta</string>
+      </property>
+     </item>
     </widget>
     <zorder>horizontalScrollBar</zorder>
     <zorder>calcTimeLCD</zorder>
@@ -342,6 +374,7 @@
     <zorder>widgetPlot</zorder>
     <zorder>tableWidget</zorder>
     <zorder>checkBox</zorder>
+    <zorder>comboBox</zorder>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

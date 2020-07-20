@@ -1,6 +1,6 @@
 /***************************************************************************
 **                                                                        **
-**  MathPlot - my university lab                                          **
+**  MathPlot                                                              **
 **  Copyright © 2020 Tonkonog Grigoriy                                    **
 **                                                                        **
 **  This program is free software: you can redistribute it and/or modify  **
@@ -75,10 +75,13 @@ class MainWindow : public QMainWindow {
 
   void on_actionAbout_triggered();
 
- private:
+  void on_comboBox_currentIndexChanged(int index);
+
+private:
   Ui::MainWindow *ui;
   QGraphicsScene *scena;
   qint64 xcalcMax = 100;
   bool AutoSized = 0;
+  int method = 0;
 };
 #endif  // MAINWINDOW_H

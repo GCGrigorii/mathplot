@@ -1,6 +1,6 @@
 /***************************************************************************
 **                                                                        **
-**  MathPlot - my university lab                                          **
+**  MathPlot                                                              **
 **  Copyright © 2020 Tonkonog Grigoriy                                    **
 **                                                                        **
 **  This program is free software: you can redistribute it and/or modify  **
